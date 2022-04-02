@@ -2,6 +2,7 @@ package gposec
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,9 @@ type RegistryValues struct {
 func (r *RegistryValues) SetResourceData(section string, d *schema.ResourceData) error {
 	out := []map[string]interface{}{}
 	for _, valuesLine := range r.Values {
+		log.Printf("[DEBUG] Registry values line is %q", valuesLine)
 		values := strings.SplitN(valuesLine, ",", 3)
+		log.Printf("[DEBUG] Registry values are %q", values)
 		value := map[string]interface{}{
 			"key_name":   values[0],
 			"value_type": values[1],
@@ -62,7 +65,13 @@ func LoadRegistryValuesFromIni(sectionName string, iniFile *ini.File, cfg *Secur
 	if err != nil {
 		return fmt.Errorf("error while parsing section %q: %s", sectionName, err)
 	}
-	cfg.RegistryValues = &RegistryValues{Values: section.KeyStrings()}
+	// cfg.RegistryValues = &RegistryValues{Values: section.KeyStrings()}
+	values := []string{}
+	for key, value := range section.KeysHash() {
+		slice := []string{key, value}
+		values = append(values, strings.Join(slice, ","))
+	}
+	cfg.RegistryValues = &RegistryValues{Values: values}
 
 	return nil
 }
