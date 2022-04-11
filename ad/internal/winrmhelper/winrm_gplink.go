@@ -224,7 +224,8 @@ func GetGPLinkFromHost(conf *config.ProviderConf, gpoGUID, containerGUID string)
 	enabled := false
 	ouDN := ""
 	for _, gplink := range gplinks {
-		if gplink[0] == gpoGUID {
+		log.Printf("[DEBUG] gplink[0]: %q, gpoGUID: %q", gplink[0], gpoGUID)
+		if strings.ToUpper(gplink[0]) == gpoGUID {
 			gpoFound = true
 			order, err := strconv.Atoi(gplink[1])
 			if err != nil {
@@ -251,6 +252,7 @@ func GetGPLinkFromHost(conf *config.ProviderConf, gpoGUID, containerGUID string)
 	}
 
 	if !gpoFound {
+		log.Printf("did not find any GPOs with ID %q attached to container %q", gpoGUID, containerGUID)
 		return nil, fmt.Errorf("did not find any GPOs with ID %q attached to container %q", gpoGUID, containerGUID)
 	}
 
@@ -299,7 +301,7 @@ func getGPLinksFromADObject(input []byte) ([][]string, error) {
 		if len(gpoGUIDs) == 1 && len(gpoGUIDs[0]) == 3 {
 			// gpoGUIDs has three elements. First is the whole matched string,
 			// second is the GPO GUID and third is the gpLinkOptions field
-			out = append(out, []string{gpoGUIDs[0][1], fmt.Sprintf("%d", idx), gpoGUIDs[0][2], ado.DistinguishedName})
+			out = append(out, []string{strings.ToUpper(gpoGUIDs[0][1]), fmt.Sprintf("%d", idx), gpoGUIDs[0][2], ado.DistinguishedName})
 		}
 	}
 	return out, nil
