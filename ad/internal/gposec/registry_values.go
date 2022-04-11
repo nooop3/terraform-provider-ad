@@ -52,7 +52,8 @@ func NewRegistryValuesFromResource(data interface{}) (IniSetSection, error) {
 	out := &RegistryValues{Values: []string{}}
 	for _, item := range data.(*schema.Set).List() {
 		rv := item.(map[string]interface{})
-		value := fmt.Sprintf(`"%s",%s,"%s"`, rv["key_name"].(string), rv["value_type"].(string), rv["value"].(string))
+		// value := fmt.Sprintf(`"%s",%s,"%s"`, rv["key_name"].(string), rv["value_type"].(string), rv["value"].(string))
+		value := fmt.Sprintf(`%s=%s,%s`, rv["key_name"].(string), rv["value_type"].(string), rv["value"].(string))
 		out.Values = append(out.Values, value)
 	}
 	return out, nil
