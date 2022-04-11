@@ -126,13 +126,15 @@ func GetString(v interface{}) string {
 	case reflect.String:
 		out = SanitiseString(v.(string))
 	case reflect.Float64:
-		out = strconv.FormatFloat(v.(float64), 'E', -1, 64)
+		// out = strconv.FormatFloat(v.(float64), 'E', -1, 64)
+		out = fmt.Sprintf("%v", v)
 	case reflect.Int64:
 		out = strconv.FormatInt(v.(int64), 10)
 	case reflect.Bool:
 		out = strconv.FormatBool(v.(bool))
 	}
-	return fmt.Sprintf(`"%s"`, out)
+	// return fmt.Sprintf(`"%s"`, out)
+	return fmt.Sprintf(`%s`, out)
 }
 
 // SortInnerSlice is used to sort multivalued custom attributes.

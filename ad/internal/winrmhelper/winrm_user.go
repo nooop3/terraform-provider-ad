@@ -366,7 +366,7 @@ func (u *User) ModifyUser(d *schema.ResourceData, conf *config.ProviderConf) err
 				} else {
 					out = newVal.(string)
 				}
-				toAdd = append(toAdd, fmt.Sprintf("%s=%s", SanitiseString(k), out))
+				toAdd = append(toAdd, fmt.Sprintf(`%s="%s"`, SanitiseString(k), out))
 			}
 		}
 
