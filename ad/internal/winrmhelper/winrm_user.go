@@ -491,9 +491,9 @@ func (u *User) getOtherAttributes() (string, error) {
 			}
 			cleanValue = strings.Join(quotedStrings, ",")
 		} else {
-			cleanValue = GetString(v.(string))
+			cleanValue = GetString(v)
 		}
-		out = append(out, fmt.Sprintf(`'%s'=%s`, cleanKey, cleanValue))
+		out = append(out, fmt.Sprintf(`%s="%s"`, cleanKey, cleanValue))
 	}
 	finalAttrString := strings.Join(out, ";")
 	return fmt.Sprintf("@{%s}", finalAttrString), nil
